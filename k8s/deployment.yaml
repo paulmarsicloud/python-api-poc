@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: python-api
-          image: docker.io/library/python-api:latest
+          image: ghcr.io/paulmarsicloud/python-api-poc:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
