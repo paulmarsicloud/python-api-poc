@@ -48,13 +48,9 @@ jobs:
           echo "Waiting for pods..."
           kubectl rollout status deployment/python-api --timeout=60s
 
-      - name: Get service URL
-        id: url
+      - name: Port-forward and test endpoints
         run: |
-          minikube service python-api-service --url > svc_url.txt
-          echo "SERVICE_URL=$(cat svc_url.txt)" >> $GITHUB_ENV
-
-      - name: Curl the /terms endpoint
-        run: |
-          echo "Testing $SERVICE_URL/terms"
-          curl -v "$SERVICE_URL/terms"
+          kubectl port-forward svc/python-api-service 8080:80
+          sleep 5
+          curl http://localhost:8080/terms
+          curl http://localhost:8080/definitions\?term=person
