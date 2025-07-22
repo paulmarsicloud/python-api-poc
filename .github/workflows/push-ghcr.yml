@@ -32,3 +32,32 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
           platforms: linux/amd64,linux/arm64
+
+      - name: Install minikube dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y conntrack socat curl
+
+      - name: Set up Minikube
+        uses: medyagh/setup-minikube@v0.0.14
+
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+
+      - name: Wait for service to be ready
+        run: |
+          echo "Waiting for pods..."
+          kubectl rollout status deployment/python-api --timeout=60s
+
+      - name: Get service URL
+        id: url
+        run: |
+          minikube service python-api-service --url > svc_url.txt
+          echo "SERVICE_URL=$(cat svc_url.txt)" >> $GITHUB_ENV
+
+      - name: Curl the /terms endpoint
+        run: |
+          echo "Testing $SERVICE_URL/terms"
+          curl -v "$SERVICE_URL/terms"

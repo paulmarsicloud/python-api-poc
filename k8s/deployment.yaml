@@ -15,6 +15,6 @@ spec:
       containers:
         - name: python-api
           image: ghcr.io/paulmarsicloud/python-api-poc:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
