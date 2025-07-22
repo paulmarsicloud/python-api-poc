@@ -51,6 +51,5 @@ jobs:
       - name: Port-forward and test endpoints
         run: |
           kubectl port-forward svc/python-api-service 8080:80
-          sleep 5
           curl http://localhost:8080/terms
           curl http://localhost:8080/definitions\?term=person
